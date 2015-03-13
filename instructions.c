@@ -12,7 +12,14 @@ void instr_manager_init()
 		instr_manager->count = 0;
 		instr_manager->first = NULL;
 		instr_manager->last = NULL;
+		instr_manager->label_count = 0;
+		instr_manager->label_tab = malloc(sizeof(struct instr *) * 255);
 	}
+}
+
+struct instr_manager *instr_manager_get()
+{
+	return instr_manager;
 }
 
 void instr_manager_print_textual()
@@ -280,6 +287,8 @@ void instr_emit_label(int label)
 	{
 		instr->params[0] = label;
 		instr_emit_instr(instr);
+		instr_manager->label_tab[instr_manager->label_count] = instr;
+		instr_manager->label_count++;
 	}
 }
 

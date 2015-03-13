@@ -63,10 +63,12 @@ struct instr_manager
 	unsigned int count;
 	struct instr *first;
 	struct instr *last;
-	unsigned int num_label;
+	unsigned int label_count;
+	struct instr **label_tab; // table of label instructions
 };
 
 void instr_manager_init();
+struct instr_manager *instr_manager_get();
 void instr_manager_print_textual();
 void instr_manager_print_textual_file(FILE *f);
 void instr_emit_cop(int dest, int source);
