@@ -1,6 +1,8 @@
 #ifndef INSTRUCTIONS_H
 #define INSTRUCTIONS_H
 
+#include "label.h"
+
 /*
 Idée : faire une sorte d'instruction manager
 Celui ci contient une liste chainée des instructions émisent par
@@ -82,8 +84,8 @@ void instr_emit_equ(int dest, int op1, int op2);
 void instr_emit_inf(int dest, int op1, int op2);
 void instr_emit_sup(int dest, int op1, int op2);
 void instr_emit_pri(int what);
-void instr_emit_jmf(int addr, int label);
-void instr_emit_jmp(int label);
-void instr_emit_label(int label);
+void instr_emit_jmf(int addr, struct label *label);
+void instr_emit_jmp(struct label * label);
+void instr_emit_label(struct label *label);
 
 #endif

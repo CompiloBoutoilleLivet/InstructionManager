@@ -279,41 +279,35 @@ void instr_emit_inf(int dest, int op1, int op2)
 	}
 }
 
-void instr_emit_jmf(int addr, int label)
+void instr_emit_jmf(int addr, struct label *label)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(JMF_INSTR, 2)) != NULL)
 	{
 		instr->params[0] = addr;
-		instr->params[1] = label;
+		instr->params[1] = label->numero;
 		instr_emit_instr(instr);
 	}
 }
 
-void instr_emit_jmp(int label)
+void instr_emit_jmp(struct label *label)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(JMP_INSTR, 1)) != NULL)
 	{
-		instr->params[0] = label;
+		instr->params[0] = label->numero;
 		instr_emit_instr(instr);
 	}
 }
 
-void instr_emit_label(int label)
+void instr_emit_label(struct label *label)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(LABEL_INSTR, 1)) != NULL)
 	{
-		instr->params[0] = label;
+		instr->params[0] = label->numero;
 		instr_emit_instr(instr);
-
-		if(label < 0)
-		{
-			label = -1 * label;
-		}
-		instr_manager->label_tab[label] = instr;
-		instr_manager->label_count++;
+		label->is_emitted = 1;
 	}
 }
 
