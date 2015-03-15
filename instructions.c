@@ -35,84 +35,95 @@ void instr_manager_print_textual_file(FILE *f)
 		instr = instr_manager->first;
 		while(instr != NULL)
 		{
-			switch(instr->type)
-			{
-
-				case COP_INSTR:
-					fprintf(f, "\tcop [$%d], [$%d]\n", instr->params[0], instr->params[1]);
-					break;
-
-				case AFC_INSTR:
-					fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
-					break;
-
-				case ADD_INSTR:
-					fprintf(f, "\tadd [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-				case SOU_INSTR:
-					fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-				case MUL_INSTR:
-					fprintf(f, "\tmul [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-				case DIV_INSTR:
-					fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-				case EQU_INSTR:
-					fprintf(f, "\tequ [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-
-				case INF_INSTR:
-					fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-
-				case SUP_INSTR:
-					fprintf(f, "\tsup [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
-					break;
-
-
-				case PRI_INSTR:
-					fprintf(f, "\tpri [$%d]\n", instr->params[0]);
-					break;
-
-
-				case JMP_INSTR:
-					if(instr->params[0] < 0)
-					{
-						fprintf(f, "\tjmp label_%d\n", -1*instr->params[0]);
-					}
-					break;
-
-
-				case JMF_INSTR:
-					if(instr->params[1] < 0)
-					{
-						fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], -1*instr->params[1]);
-					}
-					break;
-
-
-				case LABEL_INSTR:
-					if(instr->params[0] < 0)
-					{
-						fprintf(f, "label_%d:\n", -1*instr->params[0]);
-					}
-					break;
-
-
-				default:
-					printf("instr_manager : unknow opcode ...\n");
-					exit(-1);
-					break;
-			}
+			instr_manager_print_instr_file(f, instr);
 			instr = instr->next;
 		}
+	}
+}
+
+void instr_manager_print_instr(struct instr *instr)
+{
+	instr_manager_print_instr_file(stdout, instr);	
+}
+
+
+void instr_manager_print_instr_file(FILE *f, struct instr *instr)
+{
+	switch(instr->type)
+	{
+
+		case COP_INSTR:
+			fprintf(f, "\tcop [$%d], [$%d]\n", instr->params[0], instr->params[1]);
+			break;
+
+		case AFC_INSTR:
+			fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
+			break;
+
+		case ADD_INSTR:
+			fprintf(f, "\tadd [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+		case SOU_INSTR:
+			fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+		case MUL_INSTR:
+			fprintf(f, "\tmul [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+		case DIV_INSTR:
+			fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+		case EQU_INSTR:
+			fprintf(f, "\tequ [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+
+		case INF_INSTR:
+			fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+
+		case SUP_INSTR:
+			fprintf(f, "\tsup [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			break;
+
+
+		case PRI_INSTR:
+			fprintf(f, "\tpri [$%d]\n", instr->params[0]);
+			break;
+
+
+		case JMP_INSTR:
+			if(instr->params[0] < 0)
+			{
+				fprintf(f, "\tjmp label_%d\n", -1*instr->params[0]);
+			} else {
+				fprintf(f, "\tjmp label_%d\n", instr->params[0]);
+			}
+			break;
+
+
+		case JMF_INSTR:
+			if(instr->params[1] < 0)
+			{
+				fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], -1*instr->params[1]);
+			} else {
+				fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], instr->params[1]);
+			}
+			break;
+
+
+		case LABEL_INSTR:
+			if(instr->params[0] < 0)
+			{
+				fprintf(f, "label_%d:\n", -1*instr->params[0]);
+			} else {
+				fprintf(f, "label_%d:\n", instr->params[0]);
+			}
+			break;
 	}
 }
 
@@ -296,7 +307,12 @@ void instr_emit_label(int label)
 	{
 		instr->params[0] = label;
 		instr_emit_instr(instr);
-		instr_manager->label_tab[instr_manager->label_count] = instr;
+
+		if(label < 0)
+		{
+			label = -1 * label;
+		}
+		instr_manager->label_tab[label] = instr;
 		instr_manager->label_count++;
 	}
 }

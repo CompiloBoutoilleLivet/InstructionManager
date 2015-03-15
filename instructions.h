@@ -71,6 +71,8 @@ void instr_manager_init();
 struct instr_manager *instr_manager_get();
 void instr_manager_print_textual();
 void instr_manager_print_textual_file(FILE *f);
+void instr_manager_print_instr(struct instr *instr);
+void instr_manager_print_instr_file(FILE *f, struct instr *instr);
 void instr_emit_cop(int dest, int source);
 void instr_emit_afc(int dest, int value);
 void instr_emit_add(int dest, int op1, int op2);
