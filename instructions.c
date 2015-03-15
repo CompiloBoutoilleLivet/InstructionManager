@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "label.h"
 #include "instructions.h"
 
 struct instr_manager *instr_manager = NULL;
@@ -12,8 +13,7 @@ void instr_manager_init()
 		instr_manager->count = 0;
 		instr_manager->first = NULL;
 		instr_manager->last = NULL;
-		instr_manager->label_count = 0;
-		instr_manager->label_tab = malloc(sizeof(struct instr *) * 255);
+		instr_manager->labels = label_table_init(255);
 	}
 }
 

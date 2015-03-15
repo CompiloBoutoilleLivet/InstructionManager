@@ -63,8 +63,7 @@ struct instr_manager
 	unsigned int count;
 	struct instr *first;
 	struct instr *last;
-	unsigned int label_count;
-	struct instr **label_tab; // table of label instructions
+	struct label_table *labels;
 };
 
 void instr_manager_init();
