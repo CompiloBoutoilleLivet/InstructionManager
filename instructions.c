@@ -83,17 +83,26 @@ void instr_manager_print_textual_file(FILE *f)
 
 
 				case JMP_INSTR:
-					fprintf(f, "\tjmp label%d\n", instr->params[0]);
+					if(instr->params[0] < 0)
+					{
+						fprintf(f, "\tjmp label_%d\n", -1*instr->params[0]);
+					}
 					break;
 
 
 				case JMF_INSTR:
-					fprintf(f, "\tjmf [$%d], label%d\n", instr->params[0], instr->params[1]);
+					if(instr->params[0] < 0)
+					{
+						fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], -1*instr->params[1]);
+					}
 					break;
 
 
 				case LABEL_INSTR:
-					fprintf(f, "label%d:\n", instr->params[0]);
+					if(instr->params[0] < 0)
+					{
+						fprintf(f, "label_%d:\n", -1*instr->params[0]);
+					}
 					break;
 
 
