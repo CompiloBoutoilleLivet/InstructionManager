@@ -93,16 +93,15 @@ struct label *label_init()
 	return ret;
 }
 
-// struct label *label_get_next_tmp_label()
-// {
-// 	struct label *ret = label_init();
-// 	sprintf(ret->name, "labelx_%04X", num_label);
-// 	ret->is_emitted = 0;
-// 	ret->numero = num_label;
-
-// 	num_label++;
-// 	return ret;
-// }
+int label_get_next_tmp_label()
+{
+	int ret;
+	struct label *label = label_init();
+	sprintf(label->name, "label_%04X", num_label);
+	ret = label_table_add_label(label);
+	num_label++;
+	return ret;
+}
 
 int label_add(char *name)
 {

@@ -19,7 +19,7 @@ struct label_table
 void label_table_init(int size);
 struct label *label_table_get_label(int i);
 int label_table_hash_string(char *name);
-struct label *label_get_next_tmp_label();
+int label_get_next_tmp_label();
 int label_add(char *name);
 
 #endif

@@ -97,32 +97,17 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr)
 
 
 		case JMP_INSTR:
-			if(instr->params[0] < 0)
-			{
-				fprintf(f, "\tjmp label_%d\n", -1*instr->params[0]);
-			} else {
-				fprintf(f, "\tjmp label_%d\n", instr->params[0]);
-			}
+			fprintf(f, "\tjmp %s\n", label_table_get_label(instr->params[0])->name);
 			break;
 
 
 		case JMF_INSTR:
-			if(instr->params[1] < 0)
-			{
-				fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], -1*instr->params[1]);
-			} else {
-				fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], instr->params[1]);
-			}
+			fprintf(f, "\tjmf [$%d] %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 			break;
 
 
 		case LABEL_INSTR:
-			if(instr->params[0] < 0)
-			{
-				fprintf(f, "label_%d:\n", -1*instr->params[0]);
-			} else {
-				fprintf(f, "label_%d:\n", instr->params[0]);
-			}
+			fprintf(f, "%s:\n", label_table_get_label(instr->params[0])->name);
 			break;
 	}
 }
