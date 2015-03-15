@@ -13,7 +13,7 @@ void instr_manager_init()
 		instr_manager->count = 0;
 		instr_manager->first = NULL;
 		instr_manager->last = NULL;
-		instr_manager->labels = label_table_init(255);
+		label_table_init(255);
 	}
 }
 
@@ -279,35 +279,38 @@ void instr_emit_inf(int dest, int op1, int op2)
 	}
 }
 
-void instr_emit_jmf(int addr, struct label *label)
+void instr_emit_jmf(int addr, int label)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(JMF_INSTR, 2)) != NULL)
 	{
 		instr->params[0] = addr;
-		instr->params[1] = label->numero;
+		instr->params[1] = label;
 		instr_emit_instr(instr);
 	}
 }
 
-void instr_emit_jmp(struct label *label)
+void instr_emit_jmp(int label)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(JMP_INSTR, 1)) != NULL)
 	{
-		instr->params[0] = label->numero;
+		instr->params[0] = label;
 		instr_emit_instr(instr);
 	}
 }
 
-void instr_emit_label(struct label *label)
+void instr_emit_label(int label)
 {
 	struct instr *instr = NULL;
+	struct label *l = NULL;
+
 	if((instr = instr_init_instr(LABEL_INSTR, 1)) != NULL)
 	{
-		instr->params[0] = label->numero;
+		instr->params[0] = label;
 		instr_emit_instr(instr);
-		label->is_emitted = 1;
+		l = label_table_get_label(label);
+		l->instr = instr;
 	}
 }
 

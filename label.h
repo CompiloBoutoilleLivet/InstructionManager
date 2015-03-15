@@ -4,8 +4,6 @@
 struct label
 {
 	char *name;
-	char is_emitted;
-	int numero;
 	struct instr *instr;
 };
 
@@ -18,7 +16,10 @@ struct label_table
 	char **tmp_labels;
 };
 
-struct label_table *label_table_init(int size);
+void label_table_init(int size);
+struct label *label_table_get_label(int i);
+int label_table_hash_string(char *name);
 struct label *label_get_next_tmp_label();
+int label_add(char *name);
 
 #endif
