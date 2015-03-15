@@ -91,7 +91,7 @@ void instr_manager_print_textual_file(FILE *f)
 
 
 				case JMF_INSTR:
-					if(instr->params[0] < 0)
+					if(instr->params[1] < 0)
 					{
 						fprintf(f, "\tjmf [$%d], label_%d\n", instr->params[0], -1*instr->params[1]);
 					}
