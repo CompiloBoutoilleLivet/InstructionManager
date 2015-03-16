@@ -80,31 +80,25 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr)
 			fprintf(f, "\tequ [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			break;
 
-
 		case INF_INSTR:
 			fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			break;
-
 
 		case SUP_INSTR:
 			fprintf(f, "\tsup [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			break;
 
-
 		case PRI_INSTR:
 			fprintf(f, "\tpri [$%d]\n", instr->params[0]);
 			break;
-
 
 		case JMP_INSTR:
 			fprintf(f, "\tjmp %s\n", label_table_get_label(instr->params[0])->name);
 			break;
 
-
 		case JMF_INSTR:
 			fprintf(f, "\tjmf [$%d] %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 			break;
-
 
 		case LABEL_INSTR:
 			fprintf(f, "%s:\n", label_table_get_label(instr->params[0])->name);
