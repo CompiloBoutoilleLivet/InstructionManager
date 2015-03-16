@@ -23,21 +23,12 @@ void label_table_init(int size)
 		return;
 	}
 
-	label_table->tmp_labels = malloc(sizeof(char *) * size);
-	if(label_table->tmp_labels == NULL)
-	{
-		free(label_table->labels);
-		free(label_table);
-		return;
-	}
 
 	label_table->count = 0;
 	label_table->size = size;
-	label_table->tmp_count = 0;
 	for(i=0; i<size; i++)
 	{
 		label_table->labels[i] = NULL;
-		label_table->tmp_labels[i] = NULL;
 	}
 }
 
@@ -64,6 +55,7 @@ int label_table_add_label(struct label *label)
 		exit(-1);
 	}
 	label_table->labels[ret] = label;
+	label_table->count++;
 	return ret;
 }
 

@@ -12,8 +12,6 @@ struct label_table
 	unsigned int size;
 	unsigned int count;
 	struct label **labels;
-	unsigned int tmp_count;
-	char **tmp_labels;
 };
 
 void label_table_init(int size);
