@@ -120,7 +120,7 @@ struct instr *instr_init_instr(enum instr_type type, int psize)
 	if(ret != NULL)
 	{
 		ret->type = type;
-		ret->params = malloc(sizeof(int)*2);
+		ret->params = malloc(sizeof(int) * psize);
 		if(ret->params == NULL)
 		{
 			free(ret);
