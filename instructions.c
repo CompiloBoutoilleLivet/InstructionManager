@@ -97,7 +97,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr)
 			break;
 
 		case JMF_INSTR:
-			fprintf(f, "\tjmf [$%d] %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+			fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 			break;
 
 		case LABEL_INSTR:
