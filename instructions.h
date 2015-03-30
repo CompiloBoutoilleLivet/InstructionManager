@@ -50,6 +50,7 @@ enum instr_type {
 	SUP_INSTR,
 	EQU_INSTR,
 	PRI_INSTR,
+	STOP_INSTR,
 	LABEL_INSTR // virtual instruction
 };
 
@@ -57,12 +58,14 @@ struct instr
 {
 	enum instr_type type;
 	int *params;
+	int instr_number;
 	struct instr *next;
 };
 
 struct instr_manager
 {
 	unsigned int count;
+	int resolved;
 	struct instr *first;
 	struct instr *last;
 	struct label_table *labels;
@@ -92,7 +95,9 @@ void instr_emit_pri(int what);
 void instr_emit_jmf(int addr, int label);
 void instr_emit_jmp(int label);
 void instr_emit_label(int label);
+void instr_emit_stop();
 
+void instr_manager_resolve_jumps();
 
 #include "term_colors.h"
 // Some define only for the colors :D

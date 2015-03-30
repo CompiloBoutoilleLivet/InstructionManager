@@ -32,6 +32,16 @@ void label_table_init(int size)
 	}
 }
 
+int label_table_get_size()
+{
+	int ret = -1;
+	if(label_table != NULL)
+	{
+		ret = label_table->size;
+	}
+	return ret;
+}
+
 int label_table_hash_string(char *name)
 {
 	int ret = 0;

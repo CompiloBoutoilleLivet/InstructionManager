@@ -11,6 +11,7 @@ void instr_manager_init()
 	if(instr_manager != NULL)
 	{
 		instr_manager->count = 0;
+		instr_manager->resolved = 0;
 		instr_manager->first = NULL;
 		instr_manager->last = NULL;
 		label_table_init(255);
@@ -164,29 +165,62 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			break;
 
 		case JMP_INSTR:
-			if(color)
+			if(instr_manager->resolved)
 			{
-				fprintf(f, "\t" C_OPERATOR("jmp") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("jmp") " " C_NUMBER("%d") "\n", instr->params[0]);
+				} else {
+					fprintf(f, "\tjmp %d\n", instr->params[0]);
+				}
 			} else {
-				fprintf(f, "\tjmp %s\n", label_table_get_label(instr->params[0])->name);
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("jmp") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+				} else {
+					fprintf(f, "\tjmp %s\n", label_table_get_label(instr->params[0])->name);
+				}
 			}
+			
 			break;
 
 		case JMF_INSTR:
-			if(color)
+			if(instr_manager->resolved)
 			{
-				fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
+				} else {
+					fprintf(f, "\tjmf [$%d], %d\n", instr->params[0], instr->params[1]);
+				}
 			} else {
-				fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+				} else {
+					fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+				}
 			}
 			break;
 
 		case LABEL_INSTR:
+			if(!instr_manager->resolved)
+			{
+				if(color)
+				{
+					fprintf(f, C_LABEL("%s") ":\n", label_table_get_label(instr->params[0])->name);
+				} else {
+					fprintf(f, "%s:\n", label_table_get_label(instr->params[0])->name);
+				}
+			}
+			break;
+
+		case STOP_INSTR:
 			if(color)
 			{
-				fprintf(f, C_LABEL("%s") ":\n", label_table_get_label(instr->params[0])->name);
+				fprintf(f, "\t" C_OPERATOR("stop") "\n");
 			} else {
-				fprintf(f, "%s:\n", label_table_get_label(instr->params[0])->name);
+				fprintf(f, "\tstop\n");
 			}
 			break;
 	}
@@ -215,8 +249,13 @@ void instr_emit_instr(struct instr *instr)
 {
 	if(instr_manager != NULL)
 	{
-		instr_manager->count++;
 		instr->next = NULL;
+
+		if(instr->type != LABEL_INSTR)
+		{
+			instr->instr_number = instr_manager->count++;
+		}
+
 		if(instr_manager->first == NULL)
 		{
 			instr_manager->first = instr;
@@ -365,6 +404,15 @@ void instr_emit_jmp(int label)
 	}
 }
 
+void instr_emit_stop()
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(STOP_INSTR, 0)) != NULL)
+	{
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_label(int label)
 {
 	struct instr *instr = NULL;
@@ -379,4 +427,58 @@ void instr_emit_label(int label)
 	}
 }
 
+void instr_manager_resolve_label_next()
+{
+	int i = 0;
+	struct label *label = NULL;
+	struct instr *instr = NULL;
 
+	for(i=0; i<label_table_get_size(); i++)
+	{
+		if((label = label_table_get_label(i)) != NULL)
+		{
+			instr = label->instr;
+			while(instr != NULL && instr->type == LABEL_INSTR)
+			{
+				instr = instr->next;
+			}
+			label->instr = instr;
+		}
+	}
+
+}
+
+void instr_manager_resolve_jumps()
+{
+	struct instr *instr = NULL;
+	struct label *label = NULL;
+
+	if(instr_manager != NULL)
+	{
+		instr_manager_resolve_label_next();
+
+		instr = instr_manager->first;
+				instr_manager->resolved = 1;
+
+
+		while(instr != NULL)
+		{
+			label = NULL;
+
+			if(instr->type == JMP_INSTR)
+			{
+				label = label_table_get_label(instr->params[0]);
+				instr->params[0] = label->instr->instr_number - instr->instr_number;
+			}
+
+			if(instr->type == JMF_INSTR)
+			{
+				label = label_table_get_label(instr->params[1]);
+				instr->params[1] = label->instr->instr_number - instr->instr_number;
+			}
+
+			instr = instr->next;
+		}
+
+	}	
+}
