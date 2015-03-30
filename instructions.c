@@ -410,6 +410,7 @@ void instr_emit_stop()
 	if((instr = instr_init_instr(STOP_INSTR, 0)) != NULL)
 	{
 		instr_emit_instr(instr);
+		instr->next = NULL;
 	}
 }
 
