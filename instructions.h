@@ -126,7 +126,7 @@ void instr_emit_jmp(int label);
 void instr_emit_label(int label);
 void instr_emit_stop();
 void instr_emit_call(int label);
-// void isntr_emit_push();
+void instr_emit_push(int value);
 
 int instr_manager_check_calls();
 void instr_manager_resolve_jumps();

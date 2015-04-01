@@ -262,6 +262,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case PUSH_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("push") " " C_NUMBER("%d") "\n", instr->params[0]);
+			} else {
+				fprintf(f, "\tpush %d\n", instr->params[0]);
+			}
+			break;
+
 		case STOP_INSTR:
 			if(color)
 			{
@@ -493,6 +502,17 @@ void instr_emit_call(int symbol)
 	if((instr = instr_init_instr(CALL_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = symbol;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_push(int value)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(PUSH_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = value;
 		instr_emit_instr(instr);
 	}
 }
