@@ -242,6 +242,24 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\tstop\n");
 			}
 			break;
+
+		case LEAVE_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("leave") "\n");
+			} else {
+				fprintf(f, "\t" "leave\n");
+			}
+			break;
+
+		case RET_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("ret") "\n");
+			} else {
+				fprintf(f, "\tret\n");
+			}
+			break;
 	}
 }
 
@@ -454,6 +472,26 @@ void instr_emit_call(int symbol)
 	if((instr = instr_init_instr(CALL_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = symbol;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_leave(){
+
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(LEAVE_INSTR, 0)) != NULL)
+	{
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_ret(){
+
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(RET_INSTR, 0)) != NULL)
+	{
 		instr_emit_instr(instr);
 	}
 }
