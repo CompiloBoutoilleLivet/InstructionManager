@@ -135,7 +135,7 @@ void instr_manager_resolve_jumps();
 #include "term_colors.h"
 // Some define only for the colors :D
 #define C_NUMBER(text) COLOR(text, CYAN)
-#define C_ADDRESS(text) COLOR(text, BRIGHT_GREEN)
+#define C_ADDRESS(text) "[$" COLOR(text, BRIGHT_GREEN) "]"
 #define C_OPERATOR(text) COLOR(text, YELLOW)
 #define C_LABEL(text) COLOR(text, RED)
 #define C_REGISTER(text) COLOR(text, BRIGHT_BLUE)

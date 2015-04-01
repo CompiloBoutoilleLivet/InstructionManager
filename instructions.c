@@ -95,7 +95,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case COP_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("cop") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1]);
+				fprintf(f, "\t" C_OPERATOR("cop") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tcop [$%d], [$%d]\n", instr->params[0], instr->params[1]);
 			}
@@ -105,7 +105,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case AFC_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("afc") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_ADDRESS("%d") ", " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
 			}
@@ -123,7 +123,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case ADD_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("add") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("add") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tadd [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -132,7 +132,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case SOU_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("sou") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("sou") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -141,7 +141,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case MUL_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("mul") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("mul") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tmul [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -150,7 +150,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case DIV_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("div") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("div") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -159,7 +159,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case EQU_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("equ") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("equ") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tequ [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -168,7 +168,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case INF_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("inf") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("inf") " " C_ADDRESS("%d") "], " C_ADDRESS("%d") "], " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -177,7 +177,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case SUP_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("sup") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("sup") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsup [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -186,7 +186,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case PRI_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("pri") " [$" C_ADDRESS("%d") "]\n", instr->params[0]);
+				fprintf(f, "\t" C_OPERATOR("pri") " " C_ADDRESS("%d") "\n", instr->params[0]);
 			} else {
 				fprintf(f, "\tpri [$%d]\n", instr->params[0]);
 			}
@@ -217,14 +217,14 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			{
 				if(color)
 				{
-					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
+					fprintf(f, "\t" C_OPERATOR("jmf") " " C_ADDRESS("%d") ", " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 				} else {
 					fprintf(f, "\tjmf [$%d], %d\n", instr->params[0], instr->params[1]);
 				}
 			} else {
 				if(color)
 				{
-					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+					fprintf(f, "\t" C_OPERATOR("jmf") " " C_ADDRESS("%d") ", " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 				} else {
 					fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 				}
@@ -274,7 +274,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case POP_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("pop") " $[" C_ADDRESS("%d") "]\n", instr->params[0]);
+				fprintf(f, "\t" C_OPERATOR("pop") " " C_ADDRESS("%d") "\n", instr->params[0]);
 			} else {
 				fprintf(f, "\tpush [$%d]\n", instr->params[0]);
 			}
