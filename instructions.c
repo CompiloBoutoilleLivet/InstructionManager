@@ -271,6 +271,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case POP_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("pop") " $[" C_ADDRESS("%d") "]\n", instr->params[0]);
+			} else {
+				fprintf(f, "\tpush [$%d]\n", instr->params[0]);
+			}
+			break;
+
 		case STOP_INSTR:
 			if(color)
 			{
@@ -513,6 +522,17 @@ void instr_emit_push(int value)
 	if((instr = instr_init_instr(PUSH_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_pop(int addr)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(POP_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = addr;
 		instr_emit_instr(instr);
 	}
 }
