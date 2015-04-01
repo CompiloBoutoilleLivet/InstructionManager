@@ -458,6 +458,32 @@ void instr_emit_call(int symbol)
 	}
 }
 
+int instr_manager_check_calls()
+{
+	int ret = 0;
+	struct instr *instr = NULL;
+
+	if(instr_manager != NULL)
+	{
+		instr = instr_manager->first;
+		while(instr != NULL)
+		{
+			if(instr->type == CALL_INSTR)
+			{
+				if(label_table_get_label(instr->params[0]) == NULL)
+				{
+					printf("call unknown functions !\n");
+					ret++;
+				}
+			}
+
+			instr = instr->next;
+		}
+	}
+
+	return ret;
+}
+
 void instr_manager_resolve_label_next()
 {
 	int i = 0;

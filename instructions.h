@@ -122,6 +122,7 @@ void instr_emit_label(int label);
 void instr_emit_stop();
 void instr_emit_call(int label);
 
+int instr_manager_check_calls();
 void instr_manager_resolve_jumps();
 
 #include "term_colors.h"
