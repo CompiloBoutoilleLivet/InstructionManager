@@ -18,6 +18,25 @@ void instr_manager_init()
 	}
 }
 
+char *instr_int_to_reg(int reg)
+{
+	switch(reg)
+	{
+		case EBP_REG:
+			return "ebp";
+			break;
+
+		case ESP_REG:
+			return "esp";
+			break;
+
+		default:
+			return "UNKNOWN";
+			break;
+
+	}
+}
+
 struct instr_manager *instr_manager_get()
 {
 	return instr_manager;
@@ -89,6 +108,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\t" C_OPERATOR("afc") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
+			}
+			break;
+
+		case AFC_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
+			} else {
+				fprintf(f, "\tafc %s, %d\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 			}
 			break;
 
@@ -303,6 +331,17 @@ void instr_emit_afc(int dest, int value)
 	if((instr = instr_init_instr(AFC_INSTR, 2)) != NULL)
 	{
 		instr->params[0] = dest;
+		instr->params[1] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_afc_reg(int reg, int value)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(AFC_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg;
 		instr->params[1] = value;
 		instr_emit_instr(instr);
 	}
