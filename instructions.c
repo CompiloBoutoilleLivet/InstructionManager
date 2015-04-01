@@ -220,11 +220,19 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			{
 				if(color)
 				{
-					fprintf(f, C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+					fprintf(f, "\t" C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
 				} else {
-					fprintf(f, "call %s\n", label_table_get_label(instr->params[0])->name);
+					fprintf(f, "\t call %s\n", label_table_get_label(instr->params[0])->name);
+				}
+			} else {
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("call") " " C_NUMBER("%d") "\n", instr->params[0]);
+				} else {
+					fprintf(f, "\t call %d\n", instr->params[0]);
 				}
 			}
+			break;
 
 		case STOP_INSTR:
 			if(color)
@@ -498,6 +506,12 @@ void instr_manager_resolve_jumps()
 			{
 				label = label_table_get_label(instr->params[1]);
 				instr->params[1] = label->instr->instr_number - instr->instr_number;
+			}
+
+			if(instr->type == CALL_INSTR)
+			{
+				label = label_table_get_label(instr->params[0]);
+				instr->params[0] = label->instr->instr_number - instr->instr_number;
 			}
 
 			instr = instr->next;
