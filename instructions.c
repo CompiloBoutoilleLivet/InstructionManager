@@ -215,6 +215,17 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case CALL_INSTR:
+			if(!instr_manager->resolved)
+			{
+				if(color)
+				{
+					fprintf(f, C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+				} else {
+					fprintf(f, "call %s\n", label_table_get_label(instr->params[0])->name);
+				}
+			}
+
 		case STOP_INSTR:
 			if(color)
 			{
@@ -425,6 +436,17 @@ void instr_emit_label(int label)
 		instr_emit_instr(instr);
 		l = label_table_get_label(label);
 		l->instr = instr;
+	}
+}
+
+void instr_emit_call(int symbol)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(CALL_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = symbol;
+		instr_emit_instr(instr);
 	}
 }
 

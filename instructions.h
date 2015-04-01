@@ -4,6 +4,27 @@
 #include "label.h"
 
 /*
+
+
+
+stack :
+localvars
+sebp // ancien ebp [$0]
+seip // retour
+
+
+save base pointer at [$0]
+
+
+push pop
+call func_toto  // ebp esp
+retaddr
+
+func_toto:
+	retour vers retaddr
+
+
+
 Idée : faire une sorte d'instruction manager
 Celui ci contient une liste chainée des instructions émisent par
 le parser. A partir de cette liste chainée, il est possible de générer
@@ -50,6 +71,9 @@ enum instr_type {
 	SUP_INSTR,
 	EQU_INSTR,
 	PRI_INSTR,
+	CALL_INSTR,
+	PUSH_INSTR,
+	POP_INSTR,
 	STOP_INSTR,
 	LABEL_INSTR // virtual instruction
 };
@@ -96,6 +120,7 @@ void instr_emit_jmf(int addr, int label);
 void instr_emit_jmp(int label);
 void instr_emit_label(int label);
 void instr_emit_stop();
+void instr_emit_call(int label);
 
 void instr_manager_resolve_jumps();
 
