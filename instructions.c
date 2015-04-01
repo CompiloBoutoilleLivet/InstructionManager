@@ -222,14 +222,14 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				{
 					fprintf(f, "\t" C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
 				} else {
-					fprintf(f, "\t call %s\n", label_table_get_label(instr->params[0])->name);
+					fprintf(f, "\tcall %s\n", label_table_get_label(instr->params[0])->name);
 				}
 			} else {
 				if(color)
 				{
 					fprintf(f, "\t" C_OPERATOR("call") " " C_NUMBER("%d") "\n", instr->params[0]);
 				} else {
-					fprintf(f, "\t call %d\n", instr->params[0]);
+					fprintf(f, "\tcall %d\n", instr->params[0]);
 				}
 			}
 			break;
