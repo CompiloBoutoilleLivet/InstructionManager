@@ -225,7 +225,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 					fprintf(f, "call %s\n", label_table_get_label(instr->params[0])->name);
 				}
 			}
-
+			break;
 		case STOP_INSTR:
 			if(color)
 			{
