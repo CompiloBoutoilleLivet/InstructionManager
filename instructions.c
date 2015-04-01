@@ -220,9 +220,9 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			{
 				if(color)
 				{
-					fprintf(f, C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+					fprintf(f, "\t" C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
 				} else {
-					fprintf(f, "call %s\n", label_table_get_label(instr->params[0])->name);
+					fprintf(f, "\t" "call %s\n", label_table_get_label(instr->params[0])->name);
 				}
 			}
 			break;
