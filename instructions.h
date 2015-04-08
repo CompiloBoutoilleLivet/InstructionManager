@@ -79,6 +79,8 @@ enum instr_type {
 	PUSH_INSTR,
 	POP_INSTR,
 	STOP_INSTR,
+	LEAVE_INSTR,
+	RET_INSTR,
 	LABEL_INSTR // virtual instruction
 };
 
@@ -128,6 +130,8 @@ void instr_emit_stop();
 void instr_emit_call(int label);
 void instr_emit_push(int value);
 void instr_emit_pop(int value);
+void instr_emit_leave();
+void instr_emit_ret();
 
 int instr_manager_check_calls();
 void instr_manager_resolve_jumps();
