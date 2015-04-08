@@ -60,6 +60,7 @@ enum instr_type {
 	COP_INSTR,
 	AFC_INSTR,
 	AFC_REG_INSTR,
+	AFC_REG_REG_INSTR,
 	JMP_INSTR,
 	JMF_INSTR,
 	INF_INSTR,
@@ -107,6 +108,7 @@ void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr);
 void instr_emit_cop(int dest, int source);
 void instr_emit_afc(int dest, int value);
 void instr_emit_afc_reg(int reg, int value);
+void instr_emit_afc_reg_reg(int reg1, int reg2);
 void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_sou(int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);

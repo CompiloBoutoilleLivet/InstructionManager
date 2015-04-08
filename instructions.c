@@ -120,6 +120,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case AFC_REG_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			} else {
+				fprintf(f, "\tafc %s, %s\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			}
+			break;
+
 		case ADD_INSTR:
 			if(color)
 			{
@@ -388,6 +397,17 @@ void instr_emit_afc_reg(int reg, int value)
 	{
 		instr->params[0] = reg;
 		instr->params[1] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_afc_reg_reg(int reg1, int reg2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(AFC_REG_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg1;
+		instr->params[1] = reg2;
 		instr_emit_instr(instr);
 	}
 }
