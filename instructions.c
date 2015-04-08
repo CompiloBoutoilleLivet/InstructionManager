@@ -102,6 +102,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			
 			break;
 
+		case COP_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("cop") " " C_REGISTER("%s") ", " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			} else {
+				fprintf(f, "\tcop %s, %s\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			}
+			break;
+
 		case AFC_INSTR:
 			if(color)
 			{
@@ -117,15 +126,6 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 			} else {
 				fprintf(f, "\tafc %s, %d\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
-			}
-			break;
-
-		case AFC_REG_REG_INSTR:
-			if(color)
-			{
-				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
-			} else {
-				fprintf(f, "\tafc %s, %s\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
 			}
 			break;
 
@@ -388,6 +388,17 @@ void instr_emit_cop(int dest, int source)
 	}
 }
 
+void instr_emit_cop_reg(int reg1, int reg2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(COP_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg1;
+		instr->params[1] = reg2;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_afc(int dest, int value)
 {
 	struct instr *instr = NULL;
@@ -406,17 +417,6 @@ void instr_emit_afc_reg(int reg, int value)
 	{
 		instr->params[0] = reg;
 		instr->params[1] = value;
-		instr_emit_instr(instr);
-	}
-}
-
-void instr_emit_afc_reg_reg(int reg1, int reg2)
-{
-	struct instr *instr = NULL;
-	if((instr = instr_init_instr(AFC_REG_REG_INSTR, 2)) != NULL)
-	{
-		instr->params[0] = reg1;
-		instr->params[1] = reg2;
 		instr_emit_instr(instr);
 	}
 }
