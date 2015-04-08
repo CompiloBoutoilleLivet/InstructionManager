@@ -54,6 +54,7 @@ LABEL_NON:
 
 enum instr_type {
 	ADD_INSTR,
+	ADD_REG_VAL_INSTR,
 	MUL_INSTR,
 	SOU_INSTR,
 	DIV_INSTR,
@@ -110,6 +111,7 @@ void instr_emit_afc(int dest, int value);
 void instr_emit_afc_reg(int reg, int value);
 void instr_emit_afc_reg_reg(int reg1, int reg2);
 void instr_emit_add(int dest, int op1, int op2);
+void instr_emit_add_reg_val(int dest, int reg1, int val);
 void instr_emit_sou(int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);
 void instr_emit_div(int dest, int op1, int op2);

@@ -138,6 +138,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case ADD_REG_VAL_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("add") " " C_REGISTER("%s") ", " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			} else {
+				fprintf(f, "\tadd %s, %s, %d\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			}
+			break;
+
 		case SOU_INSTR:
 			if(color)
 			{
@@ -420,6 +429,19 @@ void instr_emit_add(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_add_reg_val(int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(ADD_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
 		instr_emit_instr(instr);
 	}
 }
