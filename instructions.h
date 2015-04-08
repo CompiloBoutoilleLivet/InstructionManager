@@ -5,24 +5,15 @@
 
 /*
 
+afc esp, 0
+afc ebp, 0
+call boubi
 
-
-stack :
-localvars
-sebp // ancien ebp [$0]
-seip // retour
-
-
-save base pointer at [$0]
-
-
-push pop
-call func_toto  // ebp esp
-retaddr
-
-func_toto:
-	retour vers retaddr
-
+push ebp
+afc ebp, esp
+....
+leave
+ret
 
 
 Idée : faire une sorte d'instruction manager
@@ -77,6 +68,7 @@ enum instr_type {
 	PRI_INSTR,
 	CALL_INSTR,
 	PUSH_INSTR,
+	PUSH_REG_INSTR,
 	POP_INSTR,
 	STOP_INSTR,
 	LEAVE_INSTR,
@@ -129,6 +121,7 @@ void instr_emit_label(int label);
 void instr_emit_stop();
 void instr_emit_call(int label);
 void instr_emit_push(int value);
+void instr_emit_push_reg(int reg);
 void instr_emit_pop(int value);
 void instr_emit_leave();
 void instr_emit_ret();

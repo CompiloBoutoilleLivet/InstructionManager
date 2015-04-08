@@ -271,6 +271,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case PUSH_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("push") " " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]));
+			} else {
+				fprintf(f, "\tpush %s\n", instr_int_to_reg(instr->params[0]));
+			}
+			break;
+
 		case POP_INSTR:
 			if(color)
 			{
@@ -560,6 +569,17 @@ void instr_emit_push(int value)
 	if((instr = instr_init_instr(PUSH_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_push_reg(int reg)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(PUSH_REG_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = reg;
 		instr_emit_instr(instr);
 	}
 }
