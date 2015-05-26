@@ -2,6 +2,7 @@
 CC = gcc
 CFLAGS = -Wall
 LDFLAGS =
+BIN_DIR = bin/
 AOUT = example
 
 SRC = $(wildcard *.c)
@@ -13,7 +14,7 @@ all: $(AOUT)
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 example: $(OBJ)
-	$(CC) -o $(AOUT) $(OBJ) $(LDFLAGS)
+	$(CC) -o $(BIN_DIR)/$(AOUT) $(OBJ) $(LDFLAGS)
 
 clean:
 	rm -rf $(OBJ)
