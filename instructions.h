@@ -4,6 +4,18 @@
 #include "label.h"
 
 /*
+
+afc esp, 0
+afc ebp, 0
+call boubi
+
+push ebp
+afc ebp, esp
+....
+leave
+ret
+
+
 Idée : faire une sorte d'instruction manager
 Celui ci contient une liste chainée des instructions émisent par
 le parser. A partir de cette liste chainée, il est possible de générer
@@ -37,6 +49,9 @@ LABEL_NON:
 
 */
 
+#define EBP_REG 0
+#define ESP_REG 1
+
 enum instr_type {
 	ADD_INSTR = 0x01,
 	MUL_INSTR = 0x02,
@@ -51,6 +66,15 @@ enum instr_type {
 	EQU_INSTR = 0x0B,
 	PRI_INSTR = 0x0C,
 	STOP_INSTR = 0x0D,
+	ADD_REG_VAL_INSTR,
+	COP_REG_INSTR,
+	AFC_REG_INSTR,
+	CALL_INSTR,
+	PUSH_INSTR,
+	PUSH_REG_INSTR,
+	POP_INSTR,
+	LEAVE_INSTR,
+	RET_INSTR,
 	LABEL_INSTR // virtual instruction
 };
 
@@ -84,8 +108,11 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color);
 void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr);
 void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr);
 void instr_emit_cop(int dest, int source);
+void instr_emit_cop_reg(int dest, int source);
 void instr_emit_afc(int dest, int value);
+void instr_emit_afc_reg(int reg, int value);
 void instr_emit_add(int dest, int op1, int op2);
+void instr_emit_add_reg_val(int dest, int src, int val);
 void instr_emit_sou(int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);
 void instr_emit_div(int dest, int op1, int op2);
@@ -97,14 +124,22 @@ void instr_emit_jmf(int addr, int label);
 void instr_emit_jmp(int label);
 void instr_emit_label(int label);
 void instr_emit_stop();
+void instr_emit_call(int label);
+void instr_emit_push(int value);
+void instr_emit_push_reg(int reg);
+void instr_emit_pop(int value);
+void instr_emit_leave();
+void instr_emit_ret();
 
+int instr_manager_check_calls();
 void instr_manager_resolve_jumps();
 
 #include "term_colors.h"
 // Some define only for the colors :D
 #define C_NUMBER(text) COLOR(text, CYAN)
-#define C_ADDRESS(text) COLOR(text, BRIGHT_GREEN)
+#define C_ADDRESS(text) "[$" COLOR(text, BRIGHT_GREEN) "]"
 #define C_OPERATOR(text) COLOR(text, YELLOW)
 #define C_LABEL(text) COLOR(text, RED)
+#define C_REGISTER(text) COLOR(text, BRIGHT_BLUE)
 
 #endif

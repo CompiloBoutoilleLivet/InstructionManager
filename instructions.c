@@ -18,6 +18,25 @@ void instr_manager_init()
 	}
 }
 
+char *instr_int_to_reg(int reg)
+{
+	switch(reg)
+	{
+		case EBP_REG:
+			return "ebp";
+			break;
+
+		case ESP_REG:
+			return "esp";
+			break;
+
+		default:
+			return "UNKNOWN";
+			break;
+
+	}
+}
+
 struct instr_manager *instr_manager_get()
 {
 	return instr_manager;
@@ -129,8 +148,12 @@ void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr)
 			break;
 
 			case STOP_INSTR:
-			case LABEL_INSTR:
 			break;
+
+			default:
+				printf("Instruction cannot be transformed as opcode :(\n");
+				exit(EXIT_FAILURE);
+				break;
 
 		}
 
@@ -146,35 +169,62 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case COP_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("cop") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1]);
+				fprintf(f, "\t" C_OPERATOR("cop") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tcop [$%d], [$%d]\n", instr->params[0], instr->params[1]);
 			}
 			
 			break;
 
+		case COP_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("cop") " " C_REGISTER("%s") ", " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			} else {
+				fprintf(f, "\tcop %s, %s\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]));
+			}
+			break;
+
 		case AFC_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("afc") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_ADDRESS("%d") ", " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
+			}
+			break;
+
+		case AFC_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
+			} else {
+				fprintf(f, "\tafc %s, %d\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 			}
 			break;
 
 		case ADD_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("add") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("add") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tadd [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			}
+			break;
+
+		case ADD_REG_VAL_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("add") " " C_REGISTER("%s") ", " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			} else {
+				fprintf(f, "\tadd %s, %s, %d\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
 			}
 			break;
 
 		case SOU_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("sou") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("sou") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -183,7 +233,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case MUL_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("mul") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("mul") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tmul [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -192,7 +242,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case DIV_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("div") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("div") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -201,7 +251,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case EQU_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("equ") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("equ") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tequ [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -210,7 +260,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case INF_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("inf") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("inf") " " C_ADDRESS("%d") "], " C_ADDRESS("%d") "], " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -219,7 +269,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case SUP_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("sup") " [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "], [$" C_ADDRESS("%d") "]\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("sup") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsup [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
@@ -228,7 +278,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case PRI_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("pri") " [$" C_ADDRESS("%d") "]\n", instr->params[0]);
+				fprintf(f, "\t" C_OPERATOR("pri") " " C_ADDRESS("%d") "\n", instr->params[0]);
 			} else {
 				fprintf(f, "\tpri [$%d]\n", instr->params[0]);
 			}
@@ -259,14 +309,14 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			{
 				if(color)
 				{
-					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
+					fprintf(f, "\t" C_OPERATOR("jmf") " " C_ADDRESS("%d") ", " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 				} else {
 					fprintf(f, "\tjmf [$%d], %d\n", instr->params[0], instr->params[1]);
 				}
 			} else {
 				if(color)
 				{
-					fprintf(f, "\t" C_OPERATOR("jmf") " [$" C_ADDRESS("%d") "], " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+					fprintf(f, "\t" C_OPERATOR("jmf") " " C_ADDRESS("%d") ", " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 				} else {
 					fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 				}
@@ -285,12 +335,76 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case CALL_INSTR:
+			if(!instr_manager->resolved)
+			{
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("call") " " C_LABEL("%s") "\n", label_table_get_label(instr->params[0])->name);
+				} else {
+					fprintf(f, "\tcall %s\n", label_table_get_label(instr->params[0])->name);
+				}
+			} else {
+				if(color)
+				{
+					fprintf(f, "\t" C_OPERATOR("call") " " C_NUMBER("%d") "\n", instr->params[0]);
+				} else {
+					fprintf(f, "\tcall %d\n", instr->params[0]);
+				}
+			}
+			break;
+
+		case PUSH_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("push") " " C_NUMBER("%d") "\n", instr->params[0]);
+			} else {
+				fprintf(f, "\tpush %d\n", instr->params[0]);
+			}
+			break;
+
+		case PUSH_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("push") " " C_REGISTER("%s") "\n", instr_int_to_reg(instr->params[0]));
+			} else {
+				fprintf(f, "\tpush %s\n", instr_int_to_reg(instr->params[0]));
+			}
+			break;
+
+		case POP_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("pop") " " C_ADDRESS("%d") "\n", instr->params[0]);
+			} else {
+				fprintf(f, "\tpush [$%d]\n", instr->params[0]);
+			}
+			break;
+
 		case STOP_INSTR:
 			if(color)
 			{
 				fprintf(f, "\t" C_OPERATOR("stop") "\n");
 			} else {
 				fprintf(f, "\tstop\n");
+			}
+			break;
+
+		case LEAVE_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("leave") "\n");
+			} else {
+				fprintf(f, "\t" "leave\n");
+			}
+			break;
+
+		case RET_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("ret") "\n");
+			} else {
+				fprintf(f, "\tret\n");
 			}
 			break;
 	}
@@ -348,12 +462,34 @@ void instr_emit_cop(int dest, int source)
 	}
 }
 
+void instr_emit_cop_reg(int reg1, int reg2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(COP_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg1;
+		instr->params[1] = reg2;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_afc(int dest, int value)
 {
 	struct instr *instr = NULL;
 	if((instr = instr_init_instr(AFC_INSTR, 2)) != NULL)
 	{
 		instr->params[0] = dest;
+		instr->params[1] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_afc_reg(int reg, int value)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(AFC_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg;
 		instr->params[1] = value;
 		instr_emit_instr(instr);
 	}
@@ -367,6 +503,19 @@ void instr_emit_add(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_add_reg_val(int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(ADD_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
 		instr_emit_instr(instr);
 	}
 }
@@ -498,6 +647,95 @@ void instr_emit_label(int label)
 	}
 }
 
+void instr_emit_call(int symbol)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(CALL_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = symbol;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_leave()
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(LEAVE_INSTR, 0)) != NULL)
+	{
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_ret()
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(RET_INSTR, 0)) != NULL)
+	{
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_push(int value)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(PUSH_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_push_reg(int reg)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(PUSH_REG_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_pop(int addr)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(POP_INSTR, 1)) != NULL)
+	{
+		instr->params[0] = addr;
+		instr_emit_instr(instr);
+	}
+}
+
+int instr_manager_check_calls()
+{
+	int ret = 0;
+	struct instr *instr = NULL;
+
+	if(instr_manager != NULL)
+	{
+		instr = instr_manager->first;
+		while(instr != NULL)
+		{
+			if(instr->type == CALL_INSTR)
+			{
+				if(label_table_get_label(instr->params[0]) == NULL)
+				{
+					printf("call unknown functions !\n");
+					ret++;
+				}
+			}
+
+			instr = instr->next;
+		}
+	}
+	return ret;
+}
+
 void instr_manager_resolve_label_next()
 {
 	int i = 0;
@@ -546,6 +784,12 @@ void instr_manager_resolve_jumps()
 			{
 				label = label_table_get_label(instr->params[1]);
 				instr->params[1] = label->instr->instr_number - instr->instr_number;
+			}
+
+			if(instr->type == CALL_INSTR)
+			{
+				label = label_table_get_label(instr->params[0]);
+				instr->params[0] = label->instr->instr_number - instr->instr_number;
 			}
 
 			instr = instr->next;
