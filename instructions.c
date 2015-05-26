@@ -137,12 +137,36 @@ void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr)
 
 			case COP_INSTR:
 			case AFC_INSTR:
-			case JMF_INSTR:
 				op0 = instr->params[0];
 				op1 = instr->params[1];
 			break;
 
+			case JMF_INSTR:
+				op0 = instr->params[0];
+				op1 = instr->params[1];
+				op2 = 0; // on saute plus bas
+
+				if(op1 < 0)
+				{
+					op1 = -1 * op1;
+					op2 = 1; //on saute plus haut
+				}
+
+			break;
+
 			case JMP_INSTR:
+
+				op0 = instr->params[0];
+				op1 = 0; // on saute plus bas
+
+				if(op0 < 0)
+				{
+					op0 = -1 * op0;
+					op1 = 1; // saute plus haut
+				}
+
+			break;
+
 			case PRI_INSTR:
 				op0 = instr->params[0];
 			break;
