@@ -23,6 +23,30 @@ struct instr_manager *instr_manager_get()
 	return instr_manager;
 }
 
+void instr_manager_print_bytecode_file(FILE *f)
+{
+
+	struct instr *instr = NULL;
+	if(instr_manager != NULL)
+	{
+
+		/* we need resolved jumps in order to generate bytecode */
+		if(instr_manager->resolved != 1)
+		{
+			instr_manager_resolve_jumps();
+		}
+
+		instr = instr_manager->first;
+		while(instr != NULL)
+		{
+			instr_manager_print_bytecode_instr_file(f, instr);
+			instr = instr->next;
+		}
+
+	}
+
+}
+
 void instr_manager_print_textual(int color)
 {
 	instr_manager_print_textual_file(stdout, color);
@@ -66,6 +90,52 @@ void instr_manager_print_instr_no_color(struct instr *instr)
 void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr)
 {
 	instr_manager_print_instr_file(f, instr, 0);
+}
+
+void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr)
+{
+	int op0 = 0;
+	int op1 = 0;
+	int op2 = 0;
+
+	if(instr->type != LABEL_INSTR)
+	{
+
+		switch(instr->type)
+		{
+
+			case ADD_INSTR:
+			case MUL_INSTR:
+			case SOU_INSTR:
+			case DIV_INSTR:
+			case INF_INSTR:
+			case SUP_INSTR:
+			case EQU_INSTR:
+				op0 = instr->params[0];
+				op1 = instr->params[1];
+				op2 = instr->params[2];
+			break;
+
+			case COP_INSTR:
+			case AFC_INSTR:
+			case JMF_INSTR:
+				op0 = instr->params[0];
+				op1 = instr->params[1];
+			break;
+
+			case JMP_INSTR:
+			case PRI_INSTR:
+				op0 = instr->params[0];
+			break;
+
+			case STOP_INSTR:
+			case LABEL_INSTR:
+			break;
+
+		}
+
+		fprintf(f, "%d %d %d %d\n", instr->type, op0, op1, op2);
+	}
 }
 
 void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)

@@ -38,19 +38,19 @@ LABEL_NON:
 */
 
 enum instr_type {
-	ADD_INSTR,
-	MUL_INSTR,
-	SOU_INSTR,
-	DIV_INSTR,
-	COP_INSTR,
-	AFC_INSTR,
-	JMP_INSTR,
-	JMF_INSTR,
-	INF_INSTR,
-	SUP_INSTR,
-	EQU_INSTR,
-	PRI_INSTR,
-	STOP_INSTR,
+	ADD_INSTR = 0x01,
+	MUL_INSTR = 0x02,
+	SOU_INSTR = 0x03,
+	DIV_INSTR = 0x04,
+	COP_INSTR = 0x05,
+	AFC_INSTR = 0x06,
+	JMP_INSTR = 0x07,
+	JMF_INSTR = 0x08,
+	INF_INSTR = 0x09,
+	SUP_INSTR = 0x0A,
+	EQU_INSTR = 0x0B,
+	PRI_INSTR = 0x0C,
+	STOP_INSTR = 0x0D,
 	LABEL_INSTR // virtual instruction
 };
 
@@ -73,7 +73,7 @@ struct instr_manager
 
 void instr_manager_init();
 struct instr_manager *instr_manager_get();
-
+void instr_manager_print_bytecode_file(FILE *f);
 void instr_manager_print_textual(int color);
 void instr_manager_print_textual_no_color();
 void instr_manager_print_textual_file(FILE *f, int color);
@@ -82,6 +82,7 @@ void instr_manager_print_instr(struct instr *instr, int color);
 void instr_manager_print_instr_no_color(struct instr *instr);
 void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color);
 void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr);
+void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr);
 void instr_emit_cop(int dest, int source);
 void instr_emit_afc(int dest, int value);
 void instr_emit_add(int dest, int op1, int op2);
