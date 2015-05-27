@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "instructions.h"
-#include "label.h"
+#include "../instructions.h"
+#include "../label.h"
 
 int main(int argc, char const *argv[])
 {
