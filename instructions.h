@@ -69,6 +69,7 @@ enum instr_type {
 	ADD_REG_VAL_INSTR,
 	COP_REG_INSTR,
 	AFC_REG_INSTR,
+	AFC_REG_REL_INSTR,
 	CALL_INSTR,
 	PUSH_INSTR,
 	PUSH_REG_INSTR,
@@ -111,6 +112,7 @@ void instr_emit_cop(int dest, int source);
 void instr_emit_cop_reg(int dest, int source);
 void instr_emit_afc(int dest, int value);
 void instr_emit_afc_reg(int reg, int value);
+void instr_emit_afc_rel_reg(int reg, int offset, int value);
 void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_add_reg_val(int dest, int src, int val);
 void instr_emit_sou(int dest, int op1, int op2);
@@ -137,6 +139,7 @@ void instr_manager_resolve_jumps();
 #include "term_colors.h"
 // Some define only for the colors :D
 #define C_NUMBER(text) COLOR(text, CYAN)
+#define C_NUMBER_OFFSET(text) COLOR(text, BRIGHT_GREEN)
 #define C_ADDRESS(text) "[$" COLOR(text, BRIGHT_GREEN) "]"
 #define C_OPERATOR(text) COLOR(text, YELLOW)
 #define C_LABEL(text) COLOR(text, RED)
