@@ -340,8 +340,9 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			{
 				fprintf(f, "\t" C_OPERATOR("pri") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
 					instr_int_to_reg(instr->params[0]), instr->params[1]);
+			} else {
+				fprintf(f, "\tpri [%s+%d]\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 			}
-			fprintf(f, "\tpri [%s+%d]\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 			break;
 
 		case JMP_INSTR:
