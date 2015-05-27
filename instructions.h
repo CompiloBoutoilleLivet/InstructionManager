@@ -68,8 +68,9 @@ enum instr_type {
 	STOP_INSTR = 0x0D,
 	ADD_REG_VAL_INSTR,
 	COP_REG_INSTR,
+	COP_REL_REG_INSTR,
 	AFC_REG_INSTR,
-	AFC_REG_REL_INSTR,
+	AFC_REL_REG_INSTR,
 	CALL_INSTR,
 	PUSH_INSTR,
 	PUSH_REG_INSTR,
@@ -110,6 +111,7 @@ void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr);
 void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr);
 void instr_emit_cop(int dest, int source);
 void instr_emit_cop_reg(int dest, int source);
+void instr_emit_cop_rel_reg(int reg_dest, int dest, int reg_source, int source);
 void instr_emit_afc(int dest, int value);
 void instr_emit_afc_reg(int reg, int value);
 void instr_emit_afc_rel_reg(int reg, int offset, int value);

@@ -209,6 +209,23 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case COP_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("cop") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[2]),
+					instr->params[3]);
+			} else {
+				fprintf(f, "\tcop [%s+%d], [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[2]),
+					instr->params[3]);
+			}
+			break;
+
 		case AFC_INSTR:
 			if(color)
 			{
@@ -227,10 +244,9 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
-		case AFC_REG_REL_INSTR:
+		case AFC_REL_REG_INSTR:
 			if(color)
 			{
-				// fprintf(f, "\t" C_OPERATOR("afc") " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
 				fprintf(f, "\t" C_OPERATOR("afc") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], " C_NUMBER("%d") " \n",
 					instr_int_to_reg(instr->params[0]), instr->params[1], instr->params[2]);
 			} else {
@@ -508,6 +524,19 @@ void instr_emit_cop_reg(int reg1, int reg2)
 	}
 }
 
+void instr_emit_cop_rel_reg(int reg_dest, int dest, int reg_source, int source)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(COP_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg_dest;
+		instr->params[1] = dest;
+		instr->params[2] = reg_source;
+		instr->params[3] = source;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_afc(int dest, int value)
 {
 	struct instr *instr = NULL;
@@ -533,7 +562,7 @@ void instr_emit_afc_reg(int reg, int value)
 void instr_emit_afc_rel_reg(int reg, int off, int value)
 {
 	struct instr *instr = NULL;
-	if((instr = instr_init_instr(AFC_REG_REL_INSTR, 3)) != NULL)
+	if((instr = instr_init_instr(AFC_REL_REG_INSTR, 3)) != NULL)
 	{
 		instr->params[0] = reg;
 		instr->params[1] = off;
