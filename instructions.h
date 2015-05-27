@@ -77,6 +77,7 @@ enum instr_type {
 	POP_INSTR,
 	LEAVE_INSTR,
 	RET_INSTR,
+	PRI_REL_REG_INSTR,
 	LABEL_INSTR // virtual instruction
 };
 
@@ -124,6 +125,7 @@ void instr_emit_equ(int dest, int op1, int op2);
 void instr_emit_inf(int dest, int op1, int op2);
 void instr_emit_sup(int dest, int op1, int op2);
 void instr_emit_pri(int what);
+void instr_emit_pri_rel_reg(int reg, int off);
 void instr_emit_jmf(int addr, int label);
 void instr_emit_jmp(int label);
 void instr_emit_label(int label);

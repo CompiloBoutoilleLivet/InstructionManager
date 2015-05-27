@@ -335,6 +335,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case PRI_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("pri") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]), instr->params[1]);
+			}
+			fprintf(f, "\tpri [%s+%d]\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
+			break;
+
 		case JMP_INSTR:
 			if(instr_manager->resolved)
 			{
@@ -638,6 +647,17 @@ void instr_emit_pri(int what)
 	if((instr = instr_init_instr(PRI_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = what;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_pri_rel_reg(int reg, int off)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(PRI_REL_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = off;
 		instr_emit_instr(instr);
 	}
 }
