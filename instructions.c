@@ -22,12 +22,12 @@ char *instr_int_to_reg(int reg)
 {
 	switch(reg)
 	{
-		case EBP_REG:
-			return "ebp";
+		case BP_REG:
+			return "bp";
 			break;
 
-		case ESP_REG:
-			return "esp";
+		case SP_REG:
+			return "sp";
 			break;
 
 		default:

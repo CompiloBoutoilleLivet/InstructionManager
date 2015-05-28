@@ -49,8 +49,8 @@ LABEL_NON:
 
 */
 
-#define EBP_REG 0
-#define ESP_REG 1
+#define BP_REG 0
+#define SP_REG 1
 
 enum instr_type {
 	ADD_INSTR = 0x01,
