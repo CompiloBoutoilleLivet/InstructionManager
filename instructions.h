@@ -67,6 +67,10 @@ enum instr_type {
 	PRI_INSTR = 0x0C,
 	STOP_INSTR = 0x0D,
 	ADD_REG_VAL_INSTR,
+	ADD_REL_REG_INSTR,
+	SOU_REL_REG_INSTR,
+	MUL_REL_REG_INSTR,
+	DIV_REL_REG_INSTR,
 	COP_REG_INSTR,
 	COP_REL_REG_INSTR,
 	AFC_REG_INSTR,
@@ -118,9 +122,13 @@ void instr_emit_afc_reg(int reg, int value);
 void instr_emit_afc_rel_reg(int reg, int offset, int value);
 void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_add_reg_val(int dest, int src, int val);
+void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_sou(int dest, int op1, int op2);
+void instr_emit_sou_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);
+void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_div(int dest, int op1, int op2);
+void instr_emit_div_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_equ(int dest, int op1, int op2);
 void instr_emit_inf(int dest, int op1, int op2);
 void instr_emit_sup(int dest, int op1, int op2);

@@ -272,12 +272,58 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case ADD_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("add") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			} else {
+				fprintf(f, "\tadd [%s+%d], [%s+%d], [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			}
+			break;
+
 		case SOU_INSTR:
 			if(color)
 			{
 				fprintf(f, "\t" C_OPERATOR("sou") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			}
+			break;
+
+		case SOU_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("sou") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			} else {
+				fprintf(f, "\tsou [%s+%d], [%s+%d], [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
 			}
 			break;
 
@@ -290,12 +336,58 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case MUL_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("mul") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			} else {
+				fprintf(f, "\tmul [%s+%d], [%s+%d], [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			}
+			break;
+
 		case DIV_INSTR:
 			if(color)
 			{
 				fprintf(f, "\t" C_OPERATOR("div") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			}
+			break;
+
+		case DIV_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("div") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
+			} else {
+				fprintf(f, "\tdiv [%s+%d], [%s+%d], [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr->params[1],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[2],
+					instr_int_to_reg(instr->params[0]),
+					instr->params[3]
+				);
 			}
 			break;
 
@@ -606,6 +698,19 @@ void instr_emit_add_reg_val(int reg_dst, int reg_src, int val)
 	}
 }
 
+void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(ADD_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_sou(int dest, int op1, int op2)
 {
 	struct instr *instr = NULL;
@@ -614,6 +719,19 @@ void instr_emit_sou(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_sou_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(SOU_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
 		instr_emit_instr(instr);
 	}
 }
@@ -630,6 +748,19 @@ void instr_emit_mul(int dest, int op1, int op2)
 	}
 }
 
+void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(MUL_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_div(int dest, int op1, int op2)
 {
 	struct instr *instr = NULL;
@@ -638,6 +769,19 @@ void instr_emit_div(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_div_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(DIV_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
 		instr_emit_instr(instr);
 	}
 }
