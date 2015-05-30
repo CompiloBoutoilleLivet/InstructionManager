@@ -42,6 +42,11 @@ struct instr_manager *instr_manager_get()
 	return instr_manager;
 }
 
+struct instr *instr_manager_get_last_instr()
+{
+	return instr_manager->last;
+}
+
 void instr_manager_print_bytecode_file(FILE *f)
 {
 
@@ -301,6 +306,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\t" C_OPERATOR("sou") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tsou [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			}
+			break;
+
+		case SOU_REG_VAL_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("sou") " " C_REGISTER("%s") ", " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			} else {
+				fprintf(f, "\tsou %s, %s, %d\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
 			}
 			break;
 
@@ -696,6 +710,20 @@ void instr_emit_instr(struct instr *instr)
 	}
 }
 
+void instr_insert_instr(struct instr *parent, struct instr *child)
+{
+	if(instr_manager != NULL)
+	{
+		if(parent == instr_manager->last) // we juste have to call emit_instr ...
+		{
+			instr_emit_instr(child);
+		} else {
+			child->next = parent->next;
+			parent->next = child;
+		}
+	}
+}
+
 void instr_emit_cop(int dest, int source)
 {
 	struct instr *instr = NULL;
@@ -812,6 +840,19 @@ void instr_emit_sou(int dest, int op1, int op2)
 		instr->params[1] = op1;
 		instr->params[2] = op2;
 		instr_emit_instr(instr);
+	}
+}
+
+void instr_insert_sou_reg_val(struct instr *parent, int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(SOU_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
+		instr_insert_instr(parent, instr);
 	}
 }
 

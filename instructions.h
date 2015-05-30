@@ -67,6 +67,7 @@ enum instr_type {
 	PRI_INSTR = 0x0C,
 	STOP_INSTR = 0x0D,
 	ADD_REG_VAL_INSTR,
+	SOU_REG_VAL_INSTR,
 	ADD_REL_REG_INSTR,
 	SOU_REL_REG_INSTR,
 	MUL_REL_REG_INSTR,
@@ -108,6 +109,7 @@ struct instr_manager
 
 void instr_manager_init();
 struct instr_manager *instr_manager_get();
+struct instr *instr_manager_get_last_instr();
 void instr_manager_print_bytecode_file(FILE *f);
 void instr_manager_print_textual(int color);
 void instr_manager_print_textual_no_color();
@@ -118,6 +120,7 @@ void instr_manager_print_instr_no_color(struct instr *instr);
 void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color);
 void instr_manager_print_instr_file_no_color(FILE *f, struct instr *instr);
 void instr_manager_print_bytecode_instr_file(FILE *f, struct instr *instr);
+void instr_insert_instr(struct instr *parent, struct instr *child);
 void instr_emit_cop(int dest, int source);
 void instr_emit_cop_reg(int dest, int source);
 void instr_emit_cop_rel_reg(int reg_dest, int dest, int reg_source, int source);
@@ -128,6 +131,7 @@ void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_add_reg_val(int dest, int src, int val);
 void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_sou(int dest, int op1, int op2);
+void instr_insert_sou_reg_val(struct instr *parent, int dest, int src, int val);
 void instr_emit_sou_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);
 void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2);
