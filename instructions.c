@@ -425,7 +425,7 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 		case INF_INSTR:
 			if(color)
 			{
-				fprintf(f, "\t" C_OPERATOR("inf") " " C_ADDRESS("%d") "], " C_ADDRESS("%d") "], " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
+				fprintf(f, "\t" C_OPERATOR("inf") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tinf [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
 			}
