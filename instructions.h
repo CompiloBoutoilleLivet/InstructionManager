@@ -51,6 +51,7 @@ LABEL_NON:
 
 #define BP_REG 0
 #define SP_REG 1
+#define RT_REG 2
 
 enum instr_type {
 	ADD_INSTR = 0x01,
@@ -75,6 +76,7 @@ enum instr_type {
 	COP_REG_INSTR,
 	COP_REL_REG_INSTR,
 	AFC_REG_INSTR,
+	AFC_REG_MEM_INSTR,
 	AFC_REL_REG_INSTR,
 	JMF_REL_REG_INSTR,
 	EQU_REL_REG_INSTR,
@@ -126,6 +128,7 @@ void instr_emit_cop(int dest, int source);
 void instr_emit_cop_reg(int dest, int source);
 void instr_emit_cop_rel_reg(int reg_dest, int dest, int reg_source, int source);
 void instr_emit_afc(int dest, int value);
+void instr_emit_afc_reg_mem(int reg, int reg2, int off);
 void instr_emit_afc_reg(int reg, int value);
 void instr_emit_afc_rel_reg(int reg, int offset, int value);
 void instr_emit_add(int dest, int op1, int op2);

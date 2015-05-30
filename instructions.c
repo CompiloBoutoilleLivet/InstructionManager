@@ -30,6 +30,10 @@ char *instr_int_to_reg(int reg)
 			return "sp";
 			break;
 
+		case RT_REG:
+			return "rt";
+			break;
+
 		default:
 			return "UNKNOWN";
 			break;
@@ -237,6 +241,21 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\t" C_OPERATOR("afc") " " C_ADDRESS("%d") ", " C_NUMBER("%d") "\n", instr->params[0], instr->params[1]);
 			} else {
 				fprintf(f, "\tafc [$%d], %d\n", instr->params[0], instr->params[1]);
+			}
+			break;
+
+		case AFC_REG_MEM_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("afc") " " C_REGISTER("%s") ", [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr_int_to_reg(instr->params[1]),
+					instr->params[2]);
+			} else {
+				fprintf(f, "\tafc %s, [%s+%d]\n",
+					instr_int_to_reg(instr->params[0]),
+					instr_int_to_reg(instr->params[1]),
+					instr->params[2]);
 			}
 			break;
 
@@ -775,6 +794,18 @@ void instr_emit_afc(int dest, int value)
 	{
 		instr->params[0] = dest;
 		instr->params[1] = value;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_afc_reg_mem(int reg, int reg2, int off)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(AFC_REG_MEM_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = reg2;
+		instr->params[2] = off;
 		instr_emit_instr(instr);
 	}
 }
