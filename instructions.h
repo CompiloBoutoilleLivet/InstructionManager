@@ -77,6 +77,7 @@ enum instr_type {
 	COP_REL_REG_INSTR,
 	AFC_REG_INSTR,
 	AFC_REG_MEM_INSTR,
+	AFC_MEM_REG_INSTR,
 	AFC_REL_REG_INSTR,
 	JMF_REL_REG_INSTR,
 	EQU_REL_REG_INSTR,
@@ -131,6 +132,7 @@ void instr_emit_afc(int dest, int value);
 void instr_emit_afc_reg_mem(int reg, int reg2, int off);
 void instr_emit_afc_reg(int reg, int value);
 void instr_emit_afc_rel_reg(int reg, int offset, int value);
+void instr_emit_afc_mem_reg(int reg, int off, int reg2);
 void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_add_reg_val(int dest, int src, int val);
 void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2);
