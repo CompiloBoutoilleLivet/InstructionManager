@@ -400,6 +400,28 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case EQU_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("equ") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+				instr_int_to_reg(instr->params[0]),
+				instr->params[1],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[2],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[3]);
+			} else {
+				fprintf(f, "\tequ [%s+%d], [%s+%d], [%s+%d]\n",
+				instr_int_to_reg(instr->params[0]),
+				instr->params[1],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[2],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[3]);
+			}
+			
+			break;
+
 		case INF_INSTR:
 			if(color)
 			{
@@ -472,6 +494,35 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 					fprintf(f, "\t" C_OPERATOR("jmf") " " C_ADDRESS("%d") ", " C_LABEL("%s") "\n", instr->params[0], label_table_get_label(instr->params[1])->name);
 				} else {
 					fprintf(f, "\tjmf [$%d], %s\n", instr->params[0], label_table_get_label(instr->params[1])->name);
+				}
+			}
+			break;
+
+		case JMF_REL_REG_INSTR:
+			if(instr_manager->resolved)
+			{
+				if(color) {
+					fprintf(f, "\t" C_OPERATOR("jmf") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], " C_NUMBER("%d") "\n",
+						instr_int_to_reg(instr->params[0]),
+						instr->params[1],
+						instr->params[2]);
+				} else {
+					fprintf(f, "\tjmf [%s+%d], %d\n",
+						instr_int_to_reg(instr->params[0]),
+						instr->params[1],
+						instr->params[2]);
+				}
+			} else {
+				if(color) {
+					fprintf(f, "\t" C_OPERATOR("jmf") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], " C_LABEL("%s") "\n",
+						instr_int_to_reg(instr->params[0]),
+						instr->params[1],
+						label_table_get_label(instr->params[2])->name);
+				} else {
+					fprintf(f, "\tjmf [%s+%d], %s\n",
+						instr_int_to_reg(instr->params[0]),
+						instr->params[1],
+						label_table_get_label(instr->params[2])->name);
 				}
 			}
 			break;
@@ -819,6 +870,19 @@ void instr_emit_equ(int dest, int op1, int op2)
 	}
 }
 
+void instr_emit_equ_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(EQU_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_sup(int dest, int op1, int op2)
 {
 	struct instr *instr = NULL;
@@ -850,6 +914,18 @@ void instr_emit_jmf(int addr, int label)
 	{
 		instr->params[0] = addr;
 		instr->params[1] = label;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_jmf_rel_reg(int reg, int addr, int label)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(JMF_REL_REG_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = addr;
+		instr->params[2] = label;
 		instr_emit_instr(instr);
 	}
 }
@@ -1025,6 +1101,12 @@ void instr_manager_resolve_jumps()
 			{
 				label = label_table_get_label(instr->params[1]);
 				instr->params[1] = label->instr->instr_number - instr->instr_number;
+			}
+
+			if(instr->type == JMF_REL_REG_INSTR)
+			{
+				label = label_table_get_label(instr->params[2]);
+				instr->params[2] = label->instr->instr_number - instr->instr_number;
 			}
 
 			if(instr->type == CALL_INSTR)

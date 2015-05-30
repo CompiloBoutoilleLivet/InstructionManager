@@ -75,6 +75,8 @@ enum instr_type {
 	COP_REL_REG_INSTR,
 	AFC_REG_INSTR,
 	AFC_REL_REG_INSTR,
+	JMF_REL_REG_INSTR,
+	EQU_REL_REG_INSTR,
 	CALL_INSTR,
 	PUSH_INSTR,
 	PUSH_REG_INSTR,
@@ -130,11 +132,13 @@ void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_div(int dest, int op1, int op2);
 void instr_emit_div_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_equ(int dest, int op1, int op2);
+void instr_emit_equ_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_inf(int dest, int op1, int op2);
 void instr_emit_sup(int dest, int op1, int op2);
 void instr_emit_pri(int what);
 void instr_emit_pri_rel_reg(int reg, int off);
 void instr_emit_jmf(int addr, int label);
+void instr_emit_jmf_rel_reg(int reg, int addr, int label);
 void instr_emit_jmp(int label);
 void instr_emit_label(int label);
 void instr_emit_stop();
