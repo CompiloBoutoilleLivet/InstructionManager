@@ -431,6 +431,28 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case INF_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("inf") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "], [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n",
+				instr_int_to_reg(instr->params[0]),
+				instr->params[1],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[2],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[3]);
+			} else {
+				fprintf(f, "\tinf [%s+%d], [%s+%d], [%s+%d]\n",
+				instr_int_to_reg(instr->params[0]),
+				instr->params[1],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[2],
+				instr_int_to_reg(instr->params[0]),
+				instr->params[3]);
+			}
+			
+			break;
+
 		case SUP_INSTR:
 			if(color)
 			{
@@ -903,6 +925,19 @@ void instr_emit_inf(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_inf_rel_reg(int reg, int dest, int op1, int op2)
+{
+	struct instr *instr = NULL;
+	if((instr = instr_init_instr(INF_REL_REG_INSTR, 4)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = dest;
+		instr->params[2] = op1;
+		instr->params[3] = op2;
 		instr_emit_instr(instr);
 	}
 }
