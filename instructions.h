@@ -78,6 +78,7 @@ enum instr_type {
 	JMF_REL_REG_INSTR,
 	EQU_REL_REG_INSTR,
 	INF_REL_REG_INSTR,
+	SUP_REL_REG_INSTR,
 	CALL_INSTR,
 	PUSH_INSTR,
 	PUSH_REG_INSTR,
@@ -137,6 +138,7 @@ void instr_emit_equ_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_inf(int dest, int op1, int op2);
 void instr_emit_inf_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_sup(int dest, int op1, int op2);
+void instr_emit_sup_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_pri(int what);
 void instr_emit_pri_rel_reg(int reg, int off);
 void instr_emit_jmf(int addr, int label);
