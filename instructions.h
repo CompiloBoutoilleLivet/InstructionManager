@@ -83,6 +83,7 @@ enum instr_type {
 	CALL_INSTR,
 	PUSH_INSTR,
 	PUSH_REG_INSTR,
+	PUSH_REL_REG_INSTR,
 	POP_INSTR,
 	LEAVE_INSTR,
 	RET_INSTR,
@@ -153,6 +154,7 @@ void instr_emit_stop();
 void instr_emit_call(int label);
 void instr_emit_push(int value);
 void instr_emit_push_reg(int reg);
+void isntr_emit_push_rel_reg(int reg, int off);
 void instr_emit_pop(int value);
 void instr_emit_leave();
 void instr_emit_ret();

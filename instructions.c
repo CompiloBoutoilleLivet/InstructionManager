@@ -631,6 +631,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case PUSH_REL_REG_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("push") " [" C_REGISTER("%s") "+" C_NUMBER_OFFSET("%d") "]\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
+			} else {
+				fprintf(f, "\tpush [%s+%d]\n", instr_int_to_reg(instr->params[0]), instr->params[1]);
+			}
+			break;
+
 		case POP_INSTR:
 			if(color)
 			{
@@ -1121,6 +1130,18 @@ void instr_emit_push_reg(int reg)
 	if((instr = instr_init_instr(PUSH_REG_INSTR, 1)) != NULL)
 	{
 		instr->params[0] = reg;
+		instr_emit_instr(instr);
+	}
+}
+
+void isntr_emit_push_rel_reg(int reg, int off)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(PUSH_REL_REG_INSTR, 2)) != NULL)
+	{
+		instr->params[0] = reg;
+		instr->params[1] = off;
 		instr_emit_instr(instr);
 	}
 }
