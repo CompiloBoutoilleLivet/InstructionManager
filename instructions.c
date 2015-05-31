@@ -401,6 +401,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 			}
 			break;
 
+		case MUL_REG_VAL_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("mul") " " C_REGISTER("%s") ", " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			} else {
+				fprintf(f, "\tmul %s, %s, %d\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			}
+			break;
+
 		case MUL_REL_REG_INSTR:
 			if(color)
 			{
@@ -430,6 +439,15 @@ void instr_manager_print_instr_file(FILE *f, struct instr *instr, int color)
 				fprintf(f, "\t" C_OPERATOR("div") " " C_ADDRESS("%d") ", " C_ADDRESS("%d") ", " C_ADDRESS("%d") "\n", instr->params[0], instr->params[1], instr->params[2]);
 			} else {
 				fprintf(f, "\tdiv [$%d], [$%d], [$%d]\n", instr->params[0], instr->params[1], instr->params[2]);
+			}
+			break;
+
+		case DIV_REG_VAL_INSTR:
+			if(color)
+			{
+				fprintf(f, "\t" C_OPERATOR("div") " " C_REGISTER("%s") ", " C_REGISTER("%s") ", " C_NUMBER("%d") "\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
+			} else {
+				fprintf(f, "\tdiv %s, %s, %d\n", instr_int_to_reg(instr->params[0]), instr_int_to_reg(instr->params[1]), instr->params[2]);
 			}
 			break;
 
@@ -927,6 +945,19 @@ void instr_emit_sou(int dest, int op1, int op2)
 	}
 }
 
+void instr_emit_sou_reg_val(int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(SOU_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_insert_sou_reg_val(struct instr *parent, int reg_dst, int reg_src, int val)
 {
 	struct instr *instr = NULL;
@@ -965,6 +996,19 @@ void instr_emit_mul(int dest, int op1, int op2)
 	}
 }
 
+void instr_emit_mul_reg_val(int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(MUL_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
+		instr_emit_instr(instr);
+	}
+}
+
 void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2)
 {
 	struct instr *instr = NULL;
@@ -986,6 +1030,19 @@ void instr_emit_div(int dest, int op1, int op2)
 		instr->params[0] = dest;
 		instr->params[1] = op1;
 		instr->params[2] = op2;
+		instr_emit_instr(instr);
+	}
+}
+
+void instr_emit_div_reg_val(int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(DIV_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
 		instr_emit_instr(instr);
 	}
 }
@@ -1209,7 +1266,7 @@ void instr_emit_push_reg(int reg)
 	}
 }
 
-void isntr_emit_push_rel_reg(int reg, int off)
+void instr_emit_push_rel_reg(int reg, int off)
 {
 	struct instr *instr = NULL;
 

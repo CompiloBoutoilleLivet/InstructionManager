@@ -72,6 +72,8 @@ enum instr_type {
 	STOP_INSTR = 0x0D,
 	ADD_REG_VAL_INSTR,
 	SOU_REG_VAL_INSTR,
+	MUL_REG_VAL_INSTR,
+	DIV_REG_VAL_INSTR,
 	ADD_REL_REG_INSTR,
 	SOU_REL_REG_INSTR,
 	MUL_REL_REG_INSTR,
@@ -140,11 +142,14 @@ void instr_emit_add(int dest, int op1, int op2);
 void instr_emit_add_reg_val(int dest, int src, int val);
 void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_sou(int dest, int op1, int op2);
+void instr_emit_sou_reg_val(int dest, int src, int val);
 void instr_insert_sou_reg_val(struct instr *parent, int dest, int src, int val);
 void instr_emit_sou_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_mul(int dest, int op1, int op2);
+void instr_emit_mul_reg_val(int dest, int src, int val);
 void instr_emit_mul_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_div(int dest, int op1, int op2);
+void instr_emit_div_reg_val(int dest, int src, int val);
 void instr_emit_div_rel_reg(int reg, int dest, int op1, int op2);
 void instr_emit_equ(int dest, int op1, int op2);
 void instr_emit_equ_rel_reg(int reg, int dest, int op1, int op2);
@@ -162,7 +167,7 @@ void instr_emit_stop();
 void instr_emit_call(int label);
 void instr_emit_push(int value);
 void instr_emit_push_reg(int reg);
-void isntr_emit_push_rel_reg(int reg, int off);
+void instr_emit_push_rel_reg(int reg, int off);
 void instr_emit_pop(int value);
 void instr_emit_leave();
 void instr_emit_ret();
