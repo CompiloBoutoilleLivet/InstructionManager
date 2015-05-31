@@ -943,6 +943,19 @@ void instr_emit_add_rel_reg(int reg, int dest, int op1, int op2)
 	}
 }
 
+void instr_insert_add_reg_val(struct instr *parent, int reg_dst, int reg_src, int val)
+{
+	struct instr *instr = NULL;
+
+	if((instr = instr_init_instr(ADD_REG_VAL_INSTR, 3)) != NULL)
+	{
+		instr->params[0] = reg_dst;
+		instr->params[1] = reg_src;
+		instr->params[2] = val;
+		instr_insert_instr(parent, instr);
+	}
+}
+
 void instr_emit_sou(int dest, int op1, int op2)
 {
 	struct instr *instr = NULL;
@@ -965,19 +978,6 @@ void instr_emit_sou_reg_val(int reg_dst, int reg_src, int val)
 		instr->params[1] = reg_src;
 		instr->params[2] = val;
 		instr_emit_instr(instr);
-	}
-}
-
-void instr_insert_sou_reg_val(struct instr *parent, int reg_dst, int reg_src, int val)
-{
-	struct instr *instr = NULL;
-
-	if((instr = instr_init_instr(SOU_REG_VAL_INSTR, 3)) != NULL)
-	{
-		instr->params[0] = reg_dst;
-		instr->params[1] = reg_src;
-		instr->params[2] = val;
-		instr_insert_instr(parent, instr);
 	}
 }
 
