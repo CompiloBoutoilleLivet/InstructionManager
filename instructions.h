@@ -53,6 +53,9 @@ LABEL_NON:
 #define SP_REG 1
 #define RT_REG 2
 
+char *instr_int_to_reg(int reg);
+int instr_reg_to_int(char *name);
+
 enum instr_type {
 	ADD_INSTR = 0x01,
 	MUL_INSTR = 0x02,

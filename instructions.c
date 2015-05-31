@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "label.h"
 #include "instructions.h"
 
@@ -38,6 +39,22 @@ char *instr_int_to_reg(int reg)
 			return "UNKNOWN";
 			break;
 
+	}
+}
+
+int instr_reg_to_int(char *name)
+{
+	if(strcmp(name, "bp") == 0)
+	{
+		return BP_REG;
+	} else if(strcmp(name, "sp") == 0)
+	{
+		return SP_REG;
+	} else if(strcmp(name, "rt") == 0)
+	{
+		return RT_REG;
+	} else {
+		return -1;
 	}
 }
 
