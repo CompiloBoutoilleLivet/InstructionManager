@@ -119,6 +119,7 @@ struct instr_manager
 void instr_manager_init();
 struct instr_manager *instr_manager_get();
 struct instr *instr_manager_get_last_instr();
+struct instr *instr_get_instr_by_num(int num);
 void instr_manager_print_bytecode_file(FILE *f);
 void instr_manager_print_textual(int color);
 void instr_manager_print_textual_no_color();

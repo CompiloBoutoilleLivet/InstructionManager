@@ -68,6 +68,16 @@ struct instr *instr_manager_get_last_instr()
 	return instr_manager->last;
 }
 
+struct instr *instr_get_instr_by_num(int num)
+{
+	struct instr *instr = instr_manager->first;
+	while(instr != NULL && instr->instr_number != num)
+	{
+		instr = instr->next;
+	}
+	return instr;
+}
+
 void instr_manager_print_bytecode_file(FILE *f)
 {
 
